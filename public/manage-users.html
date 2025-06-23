@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="styles.css">
+  <title>Edit/Delete Users</title>
+</head>
+<body>
+  <h2>Edit/Delete Users</h2>
+  <ul id="userList"></ul>
+  <script>
+    // Fetch users and display with Edit/Delete buttons
+    fetch('/api/users')
+      .then(response => response.json())
+      .then(users => {
+        const list = document.getElementById('userList');
+        users.forEach((user, idx) => {
+          const li = document.createElement('li');
+          li.innerHTML = `
+            <span>${user.username}</span>
+            <button onclick="editUser(${idx}, '${user.username}')">Edit</button>
+            <button onclick="deleteUser('${user.username}')">Delete</button>
+          `;
+          list.appendChild(li);
+        });
+      });
+
+    function editUser(idx, username) {
+      const newUsername = prompt('Edit username:', username);
+      if (newUsername && newUsername !== username) {
+        fetch('/api/users/' + username, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: newUsername })
+        }).then(() => location.reload());
+      }
+    }
+
+    function deleteUser(username) {
+      if (confirm('Delete user "' + username + '"?')) {
+        fetch('/api/users/' + username, { method: 'DELETE' })
+          .then(() => location.reload());
+      }
+    }
+  </script>
+</body>
+</html>

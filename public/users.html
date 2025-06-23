@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="styles.css">
+  <title>Users List</title>
+</head>
+<body>
+  <nav>
+  <a href="index.html">Home</a> |
+  <a href="register.html">Register</a> |
+  <a href="login.html">Login</a> |
+  <a href="users.html">View Users</a> |
+  <a href="manage-users.html">Edit/Delete Users</a>
+</nav>
+<hr>
+  <h2>Registered Users</h2>
+  <ul id="userList"></ul>
+  <script>
+    fetch('/api/users')
+      .then(response => response.json())
+      .then(users => {
+        const list = document.getElementById('userList');
+        users.forEach(user => {
+          const li = document.createElement('li');
+          li.textContent = `username: ${user.username}`;
+          list.appendChild(li);
+        });
+      });
+  </script>
+</body>
+</html>
